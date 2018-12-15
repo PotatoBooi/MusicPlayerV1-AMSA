@@ -19,14 +19,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.musicplayerv1.R.id.rec_list
 import com.example.musicplayerv1.data.MusicDataSource
 import com.example.musicplayerv1.data.SongListItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,9 +42,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
-     //   setupPermissions()
+
         super.onStart()
 
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadList()
     }
 
     override fun onCreateView(name: String?, context: Context?, attrs: AttributeSet?): View? {
@@ -66,12 +71,12 @@ class MainActivity : AppCompatActivity() {
     }
     private fun loadList(){
 
-        GlobalScope.launch(Dispatchers.Main) {
+            GlobalScope.launch(Dispatchers.Main) {
 
-            songList = dataSource.getListOfSongs()
-            adapter.submitList(songList)
+                songList = dataSource.getListOfSongs()
+                adapter.submitList(songList)
+
         }
-
     }
 
     inner class SongListAdapter
@@ -137,6 +142,7 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this,
             arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
             REQUEST_CODE)
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -145,6 +151,7 @@ class MainActivity : AppCompatActivity() {
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Log.i(TAG, "Permission has been denied by user")
                     finish()
+
                 } else {
                     Log.i(TAG, "Permission has been granted by user")
                     loadList()
